@@ -1,3 +1,4 @@
 *.pyc
 *.sw[po]
 env
+cybozu_user_api.egg-info
