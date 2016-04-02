@@ -11,8 +11,8 @@ from .utils import auth_header, detect_encoding
 
 class Exportable(metaclass=ABCMeta):
     @classmethod
-    def export_from_cybozu(cls, sub_domain_name, login_name, password):
-        request = Request(cls._export_endpoint(sub_domain_name),
+    def export_csv_from_cybozu(cls, sub_domain_name, login_name, password):
+        request = Request(cls._export_csv_endpoint(sub_domain_name),
                           headers=auth_header(login_name, password),
                           method='GET')
         try:
@@ -39,5 +39,5 @@ class Exportable(metaclass=ABCMeta):
 
     @staticmethod
     @abstractmethod
-    def _export_endpoint(sub_domain_name):
+    def _export_csv_endpoint(sub_domain_name):
         pass
