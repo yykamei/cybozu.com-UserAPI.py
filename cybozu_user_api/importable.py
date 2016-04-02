@@ -95,3 +95,6 @@ class Importable(metaclass=ABCMeta):
     @abstractmethod
     def _import_endpoint(sub_domain_name):
         pass
+
+    def __repr__(self):
+        return self.as_json()

@@ -14,14 +14,22 @@ class Title(Exportable, Importable):
         self.id = id
         self.code = code
         self.name = name
-        if description == '' or description is None:
-            self.description = None
+        self.description = description
+        self.delete_flag = delete_flag
+
+    def __setattr__(self, name, value):
+        if name == 'delete_flag':
+            if str(value) == 1 or value == True:
+                object.__setattr__(self, name, '1')
+            else:
+                object.__setattr__(self, name, None)
+        elif name == 'description':
+            if isinstance(value, str) and len(value) > 0:
+                object.__setattr__(self, name, value)
+            else:
+                object.__setattr__(self, name, None)
         else:
-            self.description = description
-        if delete_flag == '1' or delete_flag == True:
-            self.delete_flag = '1'
-        else:
-            self.delete_flag = None
+            object.__setattr__(self, name, value)
 
     def as_json(self):
         return json.dumps(OrderedDict([
