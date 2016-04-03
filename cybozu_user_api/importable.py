@@ -15,6 +15,20 @@ MAX_RETRY_COUNT = 5
 class Importable(metaclass=ABCMeta):
     def import_to_cybozu(self, sub_domain_name, login_name, password):
         data = self.as_csv()
+        next_data = self._call_file_endpoint(sub_domain_name,
+                                             login_name,
+                                             password,
+                                             data)
+        job_id = self._call_import_endpoint(sub_domain_name,
+                                            login_name,
+                                            password,
+                                            next_data)
+        self._call_result_endpoint(sub_domain_name,
+                                   login_name,
+                                   password,
+                                   job_id)
+
+    def _call_file_endpoint(self, sub_domain_name, login_name, password, data):
         boundary = '%s' % (uuid4().hex,)
         headers = auth_header(login_name, password)
         headers['Content-Type'] = 'multipart/form-data; boundary=%s' % (boundary,)
@@ -34,9 +48,13 @@ class Importable(metaclass=ABCMeta):
         except URLError as e:
             raise  # FIXME
         next_data = response.read()
+        return next_data
+
+    def _call_import_endpoint(self, sub_domain_name, login_name, password, data):
+        headers = auth_header(login_name, password)
         headers['Content-Type'] = 'application/json; charset=utf-8'
         request = Request(self._import_endpoint(sub_domain_name),
-                          next_data,
+                          data,
                           headers=headers,
                           method='POST')
         try:
@@ -51,7 +69,10 @@ class Importable(metaclass=ABCMeta):
             raise  # FIXME
         except KeyError as e:
             raise  # FIXME
-        del headers['Content-Type']
+        return job_id
+
+    def _call_result_endpoint(self, sub_domain_name, login_name, password, job_id):
+        headers = auth_header(login_name, password)
         request = Request(self._result_endpoint(sub_domain_name, job_id),
                           headers=headers,
                           method='GET')
@@ -59,7 +80,6 @@ class Importable(metaclass=ABCMeta):
             try:
                 response = urlopen(request)
             except URLError as e:
-                print(e.read())
                 raise  # FIXME
             encoding = detect_encoding(response.getheader('Content-Type', 'application/json;charset=utf-8'))
             data = response.read().decode(encoding)
