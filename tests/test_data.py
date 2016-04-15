@@ -24,6 +24,7 @@ class TestUser(TestCase):
     def test_add_mod_delete_search(self):
         obj = User(**self.user192)
         obj.import_to_cybozu(**AUTH_SET)
+        time.sleep(3)
         self.assertIn(obj.name, [x.name for x in User.export_csv_from_cybozu(**AUTH_SET)])
         obj.delete_flag = True
         time.sleep(3)
@@ -45,6 +46,7 @@ class TestGroup(TestCase):
     def test_add_mod_delete_search(self):
         obj = Group(**self.group39)
         obj.import_to_cybozu(**AUTH_SET)
+        time.sleep(3)
         self.assertIn(obj.name, [x.name for x in Group.export_csv_from_cybozu(**AUTH_SET)])
         obj.delete_flag = True
         time.sleep(3)
@@ -65,6 +67,7 @@ class TestTitle(TestCase):
     def test_add_mod_delete_search(self):
         obj = Title(**self.title121)
         obj.import_to_cybozu(**AUTH_SET)
+        time.sleep(3)
         self.assertIn(obj.name, [x.name for x in Title.export_csv_from_cybozu(**AUTH_SET)])
         obj.delete_flag = True
         time.sleep(3)
@@ -76,7 +79,7 @@ class TestTitle(TestCase):
 class TestOrganization(TestCase):
     def setUp(self):
         self.organization213 = {
-            'id': 121,
+            'id': '213',
             'name': 'organization213',
             'code': '*',
             'localName': '組織213',
@@ -85,12 +88,14 @@ class TestOrganization(TestCase):
             'description': 'TEST',
         }
 
-    @skip
+    #@skip
     def test_add_mod_delete_search(self):
         obj = Organization(**self.organization213)
         obj.import_to_cybozu(**AUTH_SET)
+        time.sleep(3)
         self.assertIn(obj.name, [x.name for x in Organization.export_csv_from_cybozu(**AUTH_SET)])
         obj.delete_flag = True
+        time.sleep(3)
         obj.import_to_cybozu(**AUTH_SET)
         time.sleep(3)
-        self.assertNotIn(obj.name, [x.name for x in Organization.export_csv_from_cybozu(**AUTH_SET)])
+        self.assertNotIn(obj.id, [x.id for x in Organization.export_csv_from_cybozu(**AUTH_SET)])

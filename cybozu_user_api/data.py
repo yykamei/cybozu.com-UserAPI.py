@@ -205,8 +205,11 @@ class Group(Exportable, Importable):
         return 'https://{}.cybozu.com/v1/csv/group.json'.format(sub_domain_name)
 
 
-# FIXME
 class Organization(Exportable, Importable):
+    '''Organization
+
+    Organization overrides import_to_cybozu() method.
+    '''
     def __init__(self,
                  id,
                  name,
@@ -269,6 +272,25 @@ class Organization(Exportable, Importable):
     @staticmethod
     def _import_endpoint(sub_domain_name):
         return 'https://{}.cybozu.com/v1/csv/organization.json'.format(sub_domain_name)
+
+    def import_to_cybozu(self, sub_domain_name, login_name, password):
+        objs = [x if x.id != self.id else self
+                for x in self.export_csv_from_cybozu(sub_domain_name, login_name, password)]
+        if self not in objs:
+            objs.append(self)
+        data = ''.join([x.as_csv() for x in objs if x.delete_flag != '1'])
+        next_data = self._call_file_endpoint(sub_domain_name,
+                                             login_name,
+                                             password,
+                                             data)
+        job_id = self._call_import_endpoint(sub_domain_name,
+                                            login_name,
+                                            password,
+                                            next_data)
+        self._call_result_endpoint(sub_domain_name,
+                                   login_name,
+                                   password,
+                                   job_id)
 
 
 
