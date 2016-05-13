@@ -45,7 +45,7 @@ class Importable(metaclass=ABCMeta):
                           method='POST')
         try:
             response = urlopen(request)
-        except URLError as e:
+        except URLError:
             raise  # FIXME
         next_data = response.read()
         return next_data
@@ -59,15 +59,15 @@ class Importable(metaclass=ABCMeta):
                           method='POST')
         try:
             response = urlopen(request)
-        except URLError as e:
+        except URLError:
             raise  # FIXME
         encoding = detect_encoding(response.getheader('Content-Type', 'application/json;charset=utf-8'))
         data = response.read().decode(encoding)
         try:
             job_id = json.loads(data)['id']
-        except ValueError as e:
+        except ValueError:
             raise  # FIXME
-        except KeyError as e:
+        except KeyError:
             raise  # FIXME
         return job_id
 
@@ -79,7 +79,7 @@ class Importable(metaclass=ABCMeta):
         for i in range(MAX_RETRY_COUNT):
             try:
                 response = urlopen(request)
-            except URLError as e:
+            except URLError:
                 raise  # FIXME
             encoding = detect_encoding(response.getheader('Content-Type', 'application/json;charset=utf-8'))
             data = response.read().decode(encoding)
@@ -94,9 +94,9 @@ class Importable(metaclass=ABCMeta):
                     if not success:
                         raise Exception('Failed to FILE API: %s' % (result['errorCode'],))
                     break
-            except ValueError as e:
+            except ValueError:
                 raise  # FIXME
-            except KeyError as e:
+            except KeyError:
                 raise  # FIXME
 
     @staticmethod

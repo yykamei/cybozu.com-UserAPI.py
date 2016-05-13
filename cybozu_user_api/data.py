@@ -66,7 +66,7 @@ class User(Exportable, Importable):
 
     def __setattr__(self, name, value):
         if name == 'delete_flag':
-            if str(value) == 1 or value == True:
+            if str(value) == 1 or value is True:
                 object.__setattr__(self, name, '1')
             else:
                 object.__setattr__(self, name, None)
@@ -160,7 +160,7 @@ class Group(Exportable, Importable):
 
     def __setattr__(self, name, value):
         if name == 'delete_flag':
-            if str(value) == 1 or value == True:
+            if str(value) == 1 or value is True:
                 object.__setattr__(self, name, '1')
             else:
                 object.__setattr__(self, name, None)
@@ -232,7 +232,7 @@ class Organization(Exportable, Importable):
 
     def __setattr__(self, name, value):
         if name == 'delete_flag':
-            if str(value) == 1 or value == True:
+            if str(value) == 1 or value is True:
                 object.__setattr__(self, name, '1')
             else:
                 object.__setattr__(self, name, None)
@@ -293,7 +293,6 @@ class Organization(Exportable, Importable):
                                    job_id)
 
 
-
 class Title(Exportable, Importable):
     def __init__(self, id, name, code, description=None, delete_flag=None):
         self.id = id
@@ -304,7 +303,7 @@ class Title(Exportable, Importable):
 
     def __setattr__(self, name, value):
         if name == 'delete_flag':
-            if str(value) == 1 or value == True:
+            if str(value) == 1 or value is True:
                 object.__setattr__(self, name, '1')
             else:
                 object.__setattr__(self, name, None)

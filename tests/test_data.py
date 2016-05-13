@@ -3,14 +3,15 @@
 
 import os
 import time
-from unittest import TestCase, skip
-from cybozu_user_api import *
+from unittest import TestCase
+from cybozu_user_api import User, Group, Title, Organization
 
 AUTH_SET = {
     'sub_domain_name': os.environ['CYBOZU_SUB_DOMAIN_NAME'],
     'login_name': os.environ['CYBOZU_LOGIN_NAME'],
     'password': os.environ['CYBOZU_PASSWORD'],
 }
+
 
 class TestUser(TestCase):
     def setUp(self):
@@ -88,7 +89,6 @@ class TestOrganization(TestCase):
             'description': 'TEST',
         }
 
-    #@skip
     def test_add_mod_delete_search(self):
         obj = Organization(**self.organization213)
         obj.import_to_cybozu(**AUTH_SET)

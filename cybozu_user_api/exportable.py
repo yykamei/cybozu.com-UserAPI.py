@@ -17,7 +17,7 @@ class Exportable(metaclass=ABCMeta):
                           method='GET')
         try:
             response = urlopen(request)
-        except URLError as e:
+        except URLError:
             raise  # FIXME
         encoding = detect_encoding(response.getheader('Content-Type', 'application/json;charset=utf-8'))
         data = response.read().decode(encoding)
