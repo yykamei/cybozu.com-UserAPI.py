@@ -11,7 +11,7 @@ setup(
     description='Python implementation for cybozu.com User API',
     license='MIT',
     keywords='API cybozu cybozu.com',
-    url='FIXME',
+    url='FIXME!',
     version=__version__,
     packages=find_packages(),
     test_suite='tests',
